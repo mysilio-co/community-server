@@ -1,12 +1,13 @@
-import type { Operation } from '../../../../../../src/http/Operation';
 import {
   ResetPasswordHandler,
 } from '../../../../../../src/identity/interaction/email-password/handler/ResetPasswordHandler';
 import type { AccountStore } from '../../../../../../src/identity/interaction/email-password/storage/AccountStore';
+import type { InteractionOperation } from '../../../../../../src/identity/interaction/InteractionHandler';
+import { readJsonStream } from '../../../../../../src/util/StreamUtil';
 import { createPostJsonOperation } from './Util';
 
 describe('A ResetPasswordHandler', (): void => {
-  let operation: Operation;
+  let operation: InteractionOperation;
   const recordId = '123456';
   const url = `/resetURL/${recordId}`;
   const email = 'alice@test.email';
@@ -46,7 +47,9 @@ describe('A ResetPasswordHandler', (): void => {
 
   it('renders a message on success.', async(): Promise<void> => {
     operation = createPostJsonOperation({ password: 'password!', confirmPassword: 'password!', recordId }, url);
-    await expect(handler.handle({ operation })).resolves.toEqual({ type: 'response' });
+    const result = await handler.handle({ operation });
+    await expect(readJsonStream(result.data)).resolves.toEqual({});
+    expect(result.metadata.contentType).toBe('application/json');
     expect(accountStore.getForgotPasswordRecord).toHaveBeenCalledTimes(1);
     expect(accountStore.getForgotPasswordRecord).toHaveBeenLastCalledWith(recordId);
     expect(accountStore.deleteForgotPasswordRecord).toHaveBeenCalledTimes(1);

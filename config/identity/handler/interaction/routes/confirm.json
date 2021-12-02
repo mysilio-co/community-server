@@ -2,14 +2,14 @@
   "@context": "https://linkedsoftwaredependencies.org/bundles/npm/@solid/community-server/^2.0.0/components/context.jsonld",
   "@graph": [
     {
-      "comment": "Handles the reset password interaction",
-      "@id": "urn:solid-server:auth:password:ResetPasswordRoute",
+      "comment": "Handles the confirm interaction",
+      "@id": "urn:solid-server:auth:password:ConfirmRoute",
       "@type": "RelativeInteractionRoute",
       "base": { "@id": "urn:solid-server:default:variable:baseUrl" },
-      "relativePath": "/idp/resetpassword/",
+      "relativePath": "/idp/confirm/",
       "source": {
-        "@type": "ResetPasswordHandler",
-        "accountStore": { "@id": "urn:solid-server:auth:password:AccountStore" }
+        "@type": "ConfirmHandler",
+        "interactionCompleter": { "@type": "BaseInteractionCompleter" }
       }
     }
   ]

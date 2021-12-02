@@ -144,6 +144,7 @@ export * from './identity/interaction/email-password/EmailPasswordUtil';
 // Identity/Interaction/Routing
 export * from './identity/interaction/routing/BasicInteractionRoute';
 export * from './identity/interaction/routing/InteractionRoute';
+export * from './identity/interaction/routing/RelativeInteractionRoute';
 
 // Identity/Interaction/Util
 export * from './identity/interaction/util/BaseEmailSender';
@@ -152,9 +153,13 @@ export * from './identity/interaction/util/EmailSender';
 export * from './identity/interaction/util/InteractionCompleter';
 
 // Identity/Interaction
+export * from './identity/interaction/BaseInteractionHandler';
 export * from './identity/interaction/CompletingInteractionHandler';
+export * from './identity/interaction/ConfirmHandler';
+export * from './identity/interaction/ControlHandler';
+export * from './identity/interaction/HtmlViewHandler';
 export * from './identity/interaction/InteractionHandler';
-export * from './identity/interaction/SessionHttpHandler';
+export * from './identity/interaction/PromptHandler';
 
 // Identity/Ownership
 export * from './identity/ownership/NoCheckOwnershipValidator';
