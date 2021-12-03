@@ -1,0 +1,28 @@
+<h1>Redirecting...</h1>
+<p class="error" id="error"></p>
+
+<script>
+  /*
+   * The location of this page needs to be
+   * The OIDC library will set a cookie to track the active interaction
+   * which will have as scope the path of this handler.
+   */
+  const errorBlock = document.getElementById('error');
+
+  (async() => {
+    // TODO: generic error handling?
+    // Find the prompt URL
+    let res = await fetch('<%= idpIndex %>', { headers: {accept: 'application/json' }});
+    let json = await res.json();
+    if (res.status === 200) {
+      const promptUrl = json.controls.prompt;
+      res = await fetch(promptUrl, { headers: {accept: 'application/json' }});
+      json = await res.json();
+    }
+    if (res.status === 200) {
+      window.location.href = json.location;
+    } else {
+      errorBlock.innerText = `${json.statusCode} - ${json.name}: ${json.message}`;
+    }
+  })();
+</script>

@@ -5,8 +5,8 @@
       "comment": "Handles OIDC redirects containing a prompt",
       "@id": "urn:solid-server:auth:password:PromptRoute",
       "@type": "RelativeInteractionRoute",
-      "base": { "@id": "urn:solid-server:default:variable:baseUrl" },
-      "relativePath": "/idp/",
+      "base": { "@id": "urn:solid-server:auth:password:IndexRoute" },
+      "relativePath": "/prompt/",
       "source": {
         "@type": "PromptHandler",
         "promptRoutes": [

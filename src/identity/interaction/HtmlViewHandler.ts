@@ -16,13 +16,18 @@ import type { InteractionRoute } from './routing/InteractionRoute';
  * values should be the corresponding routes.
  *
  * Will only handle GET operations for which there is a matching template if HTML is more preferred than JSON.
+ *
+ * Templates will receive the parameter `idpIndex` in their context pointing to the root index URL of the IDP API.
  */
 export class HtmlViewHandler extends InteractionHandler {
+  private readonly idpIndex: string;
   private readonly templateEngine: TemplateEngine;
   private readonly templates: Record<string, string>;
 
-  public constructor(templateEngine: TemplateEngine, templates: Record<string, InteractionRoute>) {
+  public constructor(index: InteractionRoute, templateEngine: TemplateEngine,
+    templates: Record<string, InteractionRoute>) {
     super();
+    this.idpIndex = index.getPath();
     this.templateEngine = templateEngine;
     this.templates = Object.fromEntries(
       Object.entries(templates).map(([ template, route ]): [ string, string ] => [ route.getPath(), template ]),
@@ -46,7 +51,7 @@ export class HtmlViewHandler extends InteractionHandler {
 
   public async handle({ operation }: InteractionHandlerInput): Promise<Representation> {
     const template = this.templates[operation.target.path];
-    const result = await this.templateEngine.render({}, { templateFile: template });
+    const result = await this.templateEngine.render({ idpIndex: this.idpIndex }, { templateFile: template });
     return new BasicRepresentation(result, operation.target, TEXT_HTML);
   }
 }

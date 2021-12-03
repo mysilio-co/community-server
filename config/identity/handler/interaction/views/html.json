@@ -4,6 +4,7 @@
     {
       "@id": "urn:solid-server:auth:password:HtmlViewHandler",
       "@type": "HtmlViewHandler",
+      "index": { "@id": "urn:solid-server:auth:password:IndexRoute" },
       "templateEngine": {
         "comment": "Renders the specific page and embeds it into the main HTML body.",
         "@type": "ChainedTemplateEngine",
@@ -22,6 +23,10 @@
       },
       "templates": [
         {
+          "HtmlViewHandler:_templates_key": "@css:templates/identity/email-password/index.html.ejs",
+          "HtmlViewHandler:_templates_value": { "@id": "urn:solid-server:auth:password:IndexRoute" }
+        },
+        {
           "HtmlViewHandler:_templates_key": "@css:templates/identity/email-password/login.html.ejs",
           "HtmlViewHandler:_templates_value": { "@id": "urn:solid-server:auth:password:LoginRoute" }
         },
@@ -36,6 +41,22 @@
         {
           "HtmlViewHandler:_templates_key": "@css:templates/identity/email-password/reset-password.html.ejs",
           "HtmlViewHandler:_templates_value": { "@id": "urn:solid-server:auth:password:ResetPasswordRoute" }
+        },
+        {
+          "HtmlViewHandler:_templates_key": "@css:templates/identity/email-password/register-response.html.ejs",
+          "HtmlViewHandler:_templates_value": {
+            "@type": "RelativeInteractionRoute",
+            "base": { "@id": "urn:solid-server:auth:password:RegistrationRoute" },
+            "relativePath": "/response/"
+          }
+        },
+        {
+          "HtmlViewHandler:_templates_key": "@css:templates/identity/email-password/forgot-password-response.html.ejs",
+          "HtmlViewHandler:_templates_value": {
+            "@type": "RelativeInteractionRoute",
+            "base": { "@id": "urn:solid-server:auth:password:ForgotPasswordRoute" },
+            "relativePath": "/response/"
+          }
         }
       ]
     }

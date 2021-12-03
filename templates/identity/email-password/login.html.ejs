@@ -1,17 +1,13 @@
 <h1>Log in</h1>
-<form method="post">
-  <% prefilled = locals.prefilled || {}; %>
-
-  <% if (locals.message) { %>
-    <p class="error"><%= message %></p>
-  <% } %>
+<form method="post" id="mainForm">
+  <p class="error" id="error"></p>
 
   <fieldset>
     <legend>Your account</legend>
     <ol>
       <li>
         <label for="email">Email</label>
-        <input id="email" type="email" name="email" autofocus value="<%= prefilled.email || '' %>">
+        <input id="email" type="email" name="email" autofocus>
       </li>
       <li>
         <label for="password">Password</label>
@@ -26,7 +22,21 @@
   <p class="actions"><button type="submit" name="submit">Log in</button></p>
 
   <ul class="actions">
-    <li><a href="<%= controls.register %>" class="link">Sign up</a></li>
-    <li><a href="<%= controls.forgotPassword %>" class="link">Forgot password</a></li>
+    <li><a id="register-link" href="" class="link">Sign up</a></li>
+    <li><a id="forgot-link"  href="" class="link">Forgot password</a></li>
   </ul>
 </form>
+
+<script>
+  // Get controls
+  (async() => {
+    const res = await fetch('<%= idpIndex %>', { headers: { accept: 'application/json' } });
+    const json = await res.json();
+    const registerLink = document.getElementById('register-link');
+    registerLink.href = json.controls.register;
+    const forgotLink = document.getElementById('forgot-link');
+    forgotLink.href = json.controls.forgotPassword;
+  })();
+</script>
+
+<%- include('./form-script-partial.html.ejs') %>

@@ -11,6 +11,7 @@ const registrationView = {
   required: {
     email: 'string',
     password: 'string',
+    confirmPassword: 'string',
     createWebId: 'boolean',
     register: 'boolean',
     createPod: 'boolean',
@@ -21,7 +22,7 @@ const registrationView = {
     podName: 'string',
     template: 'string',
   },
-};
+} as const;
 
 /**
  * Supports registration based on the `RegistrationManager` behaviour.

@@ -1,38 +1,89 @@
-<% if (createPod) { %>
+<div id="createPod">
   <h2>Your new Pod</h2>
   <p>
-    Your new Pod is located at <a href="<%= podBaseUrl %>" class="link"><%= podBaseUrl %></a>.
+    Your new Pod is located at <a id="podBaseUrl" href="" class="link"></a>.
     <br>
     You can store your documents and data there.
   </p>
-<% } %>
+</div>
 
-<% if (createWebId) { %>
+<div id="createWebId">
   <h2>Your new WebID</h2>
   <p>
-    Your new WebID is <a href="<%= webId %>" class="link"><%= webId %></a>.
+    Your new WebID is <a id="createdWebId" href="" class="link"></a>.
     <br>
     You can use this identifier to interact with Solid pods and apps.
   </p>
-<% } %>
+</div>
 
-<% if (register) { %>
+<div id="register">
   <h2>Your new account</h2>
   <p>
-    Via your email address <em><%= email %></em>,
-    <% if (authenticating) { %>
-      you can now <a href="<%= controls.login %>">log in</a>
-    <% } else { %>
-      this server lets you log in to Solid apps
-    <% } %>
-    with your WebID <a href="<%= webId %>" class="link"><%= webId %></a>
+    Via your email address <em id="email"></em>,
+    this server lets you log in to Solid apps
+    with your WebID <a id="registeredWebId" href="" class="link"></a>
   </p>
-  <% if (!createWebId) { %>
+  <div id="registerWebId">
     <p>
       You will need to add the triple
-      <code><%= `<${webId}> <http://www.w3.org/ns/solid/terms#oidcIssuer> <${oidcIssuer}>.`%></code>
-      to your existing WebID document <em><%= webId %></em>
+      <code id="oidcIssuerTriple"></code>
+      to your existing WebID document <em id="existingWebId"></em>
       to indicate that you trust this server as a login provider.
     </p>
-  <% } %>
-<% } %>
+  </div>
+  <p id="authenticating">
+    You can now <a id="login-link" href="">log in</a>.
+  </p>
+</div>
+
+<script>
+  // Fill in data and remove irrelevant tags based on the query parameters
+  const params = Object.fromEntries(new URLSearchParams(window.location.search).entries());
+
+  const podBaseUrl = document.getElementById('podBaseUrl');
+  podBaseUrl.innerText = params.podBaseUrl;
+  podBaseUrl.href = params.podBaseUrl;
+
+  const createdWebId = document.getElementById('createdWebId');
+  createdWebId.innerText = params.webId;
+  createdWebId.href = params.webId;
+
+  const registeredWebId = document.getElementById('registeredWebId');
+  registeredWebId.innerText = params.webId;
+  registeredWebId.href = params.webId;
+
+  const oidcIssuerTriple = document.getElementById('oidcIssuerTriple');
+  oidcIssuerTriple.innerText = `<${params.webId}> <http://www.w3.org/ns/solid/terms#oidcIssuer> <${params.oidcIssuer}>.`;
+
+  const existingWebId = document.getElementById('existingWebId');
+  existingWebId.innerText = params.webId;
+
+  const email = document.getElementById('email');
+  email.innerText = params.email;
+
+  if (!params.createPod) {
+    document.getElementById('createPod').remove();
+  }
+
+  if (!params.createWebId) {
+    document.getElementById('createWebId').remove();
+  } else {
+    document.getElementById('registerWebId').remove();
+  }
+
+  if (!params.register) {
+    document.getElementById('register').remove();
+  }
+
+  if (!params.authenticating) {
+    document.getElementById('authenticating').remove();
+  } else {
+    // Get controls
+    (async() => {
+      const res = await fetch('<%= idpIndex %>');
+      const json = await res.json();
+      const registerLink = document.getElementById('login-link');
+      registerLink.href = json.controls.login;
+    })();
+  }
+</script>

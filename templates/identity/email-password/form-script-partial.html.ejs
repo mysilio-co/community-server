@@ -1,0 +1,41 @@
+<script>
+  const form = document.getElementById('mainForm');
+  form.addEventListener('submit', postForm);
+
+  const errorBlock = document.getElementById('error');
+
+  async function postForm(event) {
+    event.preventDefault();
+
+    const formData = new FormData(form);
+    const res = await fetch('', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'accept': 'application/json', 'content-type': 'application/json' },
+      body: JSON.stringify(Object.fromEntries(formData)),
+    });
+    if (res.status >= 400) {
+      const error = await res.json();
+      errorBlock.innerText = `${error.statusCode} - ${error.name}: ${error.message}`;
+    } else if (res.status === 200 || res.status === 201) {
+      const body = await res.json();
+      if (body.location) {
+        window.location.href = body.location;
+      } else {
+        console.log(body);
+        // These would cause the URL to explode, can be acquired later if needed
+        delete body.controls;
+
+        // Remove false parameters since these would be converted to "false" strings
+        for (const [key, val] of Object.entries(body)) {
+          if (typeof val === 'boolean' && !val) {
+            delete body[key];
+          }
+        }
+
+        const searchParams = new URLSearchParams(Object.entries(body));
+        window.location.href = `response/?${searchParams.toString()}`;
+      }
+    }
+  }
+</script>

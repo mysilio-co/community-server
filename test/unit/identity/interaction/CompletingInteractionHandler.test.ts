@@ -10,6 +10,7 @@ import type {
   InteractionCompleterInput,
 } from '../../../../src/identity/interaction/util/InteractionCompleter';
 import { NotImplementedHttpError } from '../../../../src/util/errors/NotImplementedHttpError';
+import { readJsonStream } from '../../../../src/util/StreamUtil';
 
 const webId = 'http://alice.test.com/card#me';
 class DummyCompletingInteractionHandler extends CompletingInteractionHandler {
@@ -33,6 +34,7 @@ describe('A CompletingInteractionHandler', (): void => {
     const representation = new BasicRepresentation('', 'application/json');
     operation = {
       method: 'POST',
+      target: { path: 'http://example.com/test/' },
       body: representation,
     } as any;
 
@@ -64,12 +66,10 @@ describe('A CompletingInteractionHandler', (): void => {
     await expect(handler.canHandle({ operation, oidcInteraction })).resolves.toBeUndefined();
   });
 
-  it('throws a redirect error with the completer location.', async(): Promise<void> => {
-    const error = expect.objectContaining({
-      statusCode: 302,
-      location,
-    });
-    await expect(handler.handle({ operation, oidcInteraction })).rejects.toThrow(error);
+  it('returns the completer location in the location field.', async(): Promise<void> => {
+    const response = await handler.handle({ operation, oidcInteraction });
+    expect(response.metadata.contentType).toBe('application/json');
+    await expect(readJsonStream(response.data)).resolves.toEqual({ location });
     expect(interactionCompleter.handleSafe).toHaveBeenCalledTimes(1);
     expect(interactionCompleter.handleSafe).toHaveBeenLastCalledWith({ oidcInteraction, webId });
   });

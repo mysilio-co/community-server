@@ -7,7 +7,7 @@ import type {
 import type {
   InteractionCompleter,
 } from '../../../../../../src/identity/interaction/util/InteractionCompleter';
-import { FoundHttpError } from '../../../../../../src/util/errors/FoundHttpError';
+import { readJsonStream } from '../../../../../../src/util/StreamUtil';
 import { createPostJsonOperation } from './Util';
 
 describe('A LoginHandler', (): void => {
@@ -63,7 +63,9 @@ describe('A LoginHandler', (): void => {
 
   it('returns the correct completion parameters.', async(): Promise<void> => {
     input.operation = createPostJsonOperation({ email, password: 'password!' });
-    await expect(handler.handle(input)).rejects.toThrow(FoundHttpError);
+    const response = await handler.handle(input);
+    expect(response.metadata.contentType).toBe('application/json');
+    await expect(readJsonStream(response.data)).resolves.toEqual({ location: 'http://test.com/redirect' });
 
     expect(accountStore.authenticate).toHaveBeenCalledTimes(1);
     expect(accountStore.authenticate).toHaveBeenLastCalledWith(email, 'password!');

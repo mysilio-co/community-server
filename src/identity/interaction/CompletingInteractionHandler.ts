@@ -1,5 +1,7 @@
+import { BasicRepresentation } from '../../http/representation/BasicRepresentation';
+import type { Representation } from '../../http/representation/Representation';
+import { APPLICATION_JSON } from '../../util/ContentTypes';
 import { BadRequestHttpError } from '../../util/errors/BadRequestHttpError';
-import { FoundHttpError } from '../../util/errors/FoundHttpError';
 import { BaseInteractionHandler } from './BaseInteractionHandler';
 import type { InteractionHandlerInput } from './InteractionHandler';
 import type { InteractionCompleterInput, InteractionCompleter } from './util/InteractionCompleter';
@@ -12,6 +14,9 @@ import type { InteractionCompleterInput, InteractionCompleter } from './util/Int
  *
  * Calls the InteractionCompleter with the results returned by the helper function
  * and throw a corresponding {@link FoundHttpError}.
+ *
+ * Instead of doing an actual redirect, a `location` field will be added the response
+ * so the API can be used more easily.
  */
 export abstract class CompletingInteractionHandler extends BaseInteractionHandler {
   protected readonly interactionCompleter: InteractionCompleter;
@@ -31,11 +36,11 @@ export abstract class CompletingInteractionHandler extends BaseInteractionHandle
     }
   }
 
-  public async handlePost(input: InteractionHandlerInput): Promise<never> {
+  public async handlePost(input: InteractionHandlerInput): Promise<Representation> {
     // Interaction is defined due to canHandle call
     const parameters = await this.getCompletionParameters(input as Required<InteractionHandlerInput>);
     const location = await this.interactionCompleter.handleSafe(parameters);
-    throw new FoundHttpError(location);
+    return new BasicRepresentation(JSON.stringify({ location }), input.operation.target, APPLICATION_JSON);
   }
 
   /**

@@ -2,9 +2,10 @@ import type { InteractionOperation, Interaction } from '../../../../src/identity
 import { PromptHandler } from '../../../../src/identity/interaction/PromptHandler';
 import type { InteractionRoute } from '../../../../src/identity/interaction/routing/InteractionRoute';
 import { BadRequestHttpError } from '../../../../src/util/errors/BadRequestHttpError';
+import { readJsonStream } from '../../../../src/util/StreamUtil';
 
 describe('A PromptHandler', (): void => {
-  const operation: InteractionOperation = {} as any;
+  const operation: InteractionOperation = { target: { path: 'http://example.com/test/' }} as any;
   let oidcInteraction: Interaction;
   let promptRoutes: Record<string, jest.Mocked<InteractionRoute>>;
   let handler: PromptHandler;
@@ -26,10 +27,9 @@ describe('A PromptHandler', (): void => {
     await expect(handler.handle({ operation, oidcInteraction })).rejects.toThrow(BadRequestHttpError);
   });
 
-  it('redirects to the correct route.', async(): Promise<void> => {
-    await expect(handler.handle({ operation, oidcInteraction })).rejects.toThrow(expect.objectContaining({
-      name: 'FoundHttpError',
-      location: 'http://example.com/idp/login/',
-    }));
+  it('returns to the correct location.', async(): Promise<void> => {
+    const response = await handler.handle({ operation, oidcInteraction });
+    expect(response.metadata.contentType).toBe('application/json');
+    await expect(readJsonStream(response.data)).resolves.toEqual({ location: 'http://example.com/idp/login/' });
   });
 });

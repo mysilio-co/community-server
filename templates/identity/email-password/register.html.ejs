@@ -1,11 +1,10 @@
 <h1>Sign up</h1>
 <form method="post" id="mainForm">
-
-  <% if (locals.message) { %>
-    <p class="error">Error: <%= message %></p>
-  <% } %>
+  <p class="error" id="error"></p>
 
   <%- include('./register-partial.html.ejs', { allowRoot: false }) %>
 
   <p class="actions"><button type="submit" name="submit">Sign up</button></p>
 </form>
+
+<%- include('./form-script-partial.html.ejs') %>

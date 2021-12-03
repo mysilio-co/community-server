@@ -3,8 +3,8 @@ import type { Interaction } from '../../../../src/identity/interaction/Interacti
 import type {
   InteractionCompleter,
 } from '../../../../src/identity/interaction/util/InteractionCompleter';
-import { FoundHttpError } from '../../../../src/util/errors/FoundHttpError';
 import { NotImplementedHttpError } from '../../../../src/util/errors/NotImplementedHttpError';
+import { readJsonStream } from '../../../../src/util/StreamUtil';
 import { createPostJsonOperation } from './email-password/handler/Util';
 
 describe('A ConfirmHandler', (): void => {
@@ -31,7 +31,9 @@ describe('A ConfirmHandler', (): void => {
 
   it('returns the correct completion parameters.', async(): Promise<void> => {
     const operation = createPostJsonOperation({ remember: true });
-    await expect(handler.handle({ operation, oidcInteraction })).rejects.toThrow(FoundHttpError);
+    const response = await handler.handle({ operation, oidcInteraction });
+    expect(response.metadata.contentType).toBe('application/json');
+    await expect(readJsonStream(response.data)).resolves.toEqual({ location: 'http://test.com/redirect' });
     expect(interactionCompleter.handleSafe).toHaveBeenCalledTimes(1);
     expect(interactionCompleter.handleSafe).toHaveBeenLastCalledWith({ oidcInteraction, webId, shouldRemember: true });
   });

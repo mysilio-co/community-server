@@ -10,12 +10,18 @@ import { readableToString } from '../../../../src/util/StreamUtil';
 import type { TemplateEngine } from '../../../../src/util/templates/TemplateEngine';
 
 describe('An HtmlViewHandler', (): void => {
+  const idpIndex = 'http://example.com/idp/';
+  let index: InteractionRoute;
   let operation: InteractionOperation;
   let templates: Record<string, jest.Mocked<InteractionRoute>>;
   let templateEngine: TemplateEngine;
   let handler: HtmlViewHandler;
 
   beforeEach(async(): Promise<void> => {
+    index = {
+      getPath: jest.fn().mockReturnValue(idpIndex),
+    } as any;
+
     operation = {
       method: 'GET',
       target: { path: 'http://example.com/idp/login/' },
@@ -32,7 +38,7 @@ describe('An HtmlViewHandler', (): void => {
       render: jest.fn().mockReturnValue(Promise.resolve('<html>')),
     };
 
-    handler = new HtmlViewHandler(templateEngine, templates);
+    handler = new HtmlViewHandler(index, templateEngine, templates);
   });
 
   it('rejects non-GET requests.', async(): Promise<void> => {
@@ -64,5 +70,7 @@ describe('An HtmlViewHandler', (): void => {
     const result = await handler.handle({ operation });
     expect(result.metadata.contentType).toBe(TEXT_HTML);
     await expect(readableToString(result.data)).resolves.toBe('<html>');
+    expect(templateEngine.render).toHaveBeenCalledTimes(1);
+    expect(templateEngine.render).toHaveBeenLastCalledWith({ idpIndex }, { templateFile: '/templates/login.html.ejs' });
   });
 });

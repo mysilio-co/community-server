@@ -5,8 +5,8 @@
       "comment": "Handles the confirm interaction",
       "@id": "urn:solid-server:auth:password:ConfirmRoute",
       "@type": "RelativeInteractionRoute",
-      "base": { "@id": "urn:solid-server:default:variable:baseUrl" },
-      "relativePath": "/idp/confirm/",
+      "base": { "@id": "urn:solid-server:auth:password:IndexRoute" },
+      "relativePath": "/confirm/",
       "source": {
         "@type": "ConfirmHandler",
         "interactionCompleter": { "@type": "BaseInteractionCompleter" }

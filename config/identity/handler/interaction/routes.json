@@ -3,6 +3,7 @@
   "import": [
     "files-scs:config/identity/handler/interaction/routes/confirm.json",
     "files-scs:config/identity/handler/interaction/routes/forgot-password.json",
+    "files-scs:config/identity/handler/interaction/routes/index.json",
     "files-scs:config/identity/handler/interaction/routes/login.json",
     "files-scs:config/identity/handler/interaction/routes/prompt.json",
     "files-scs:config/identity/handler/interaction/routes/reset-password.json",
@@ -29,6 +30,7 @@
                 ],
                 "@type": "UnsupportedAsyncHandler"
               },
+              { "@id": "urn:solid-server:auth:password:IndexRoute" },
               { "@id": "urn:solid-server:auth:password:PromptRoute" },
               { "@id": "urn:solid-server:auth:password:LoginRoute" },
               { "@id": "urn:solid-server:auth:password:ConfirmRoute" },
