@@ -63,8 +63,6 @@ workflows:
   diff:
     jobs:
       - helmfile-diff:
-          requires:
-            - docker/publish
           context:
             - kube-primary
             - docker-org-itme
