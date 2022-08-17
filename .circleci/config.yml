@@ -50,8 +50,6 @@ workflows:
             branches:
               only: main
       - helmfile-apply:
-          requires:
-            - docker/publish
           context:
             - kube-primary
             - docker-org-itme
