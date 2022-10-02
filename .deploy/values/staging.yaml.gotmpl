@@ -13,9 +13,9 @@ image:
   pullSecrets:
   - itme-image-pull-secrets
 customParameters:
-- flag: smtpUser
+- flag: --smtpUser
   value: {{ requiredEnv "SMTP_USER" }}
-- flag: smtpPassword
+- flag: --smtpPassword
   value: {{ requiredEnv "SMTP_PASSWORD" }}
 ingress:
   enabled: true
