@@ -45,7 +45,7 @@ jobs:
       - run: helmfile --file .deploy/helmfile.yaml diff
 
 workflows:
-  production-deploy:
+  deploy:
     jobs:
       - docker/publish:
           context:
@@ -58,32 +58,9 @@ workflows:
           docker-password: DOCKER_PASSWORD
           filters:
             branches:
-              only: main
-      - helmfile-apply:
-          name: apply/production
-          env: production
-          context:
-            - kube-primary
-            - docker-org-itme
-            - docker-user-ian
-            - mysilio-me-smtp
-          filters:
-            branches:
-              only: main
-  staging-deploy:
-    jobs:
-      - docker/publish:
-          context:
-            - docker-org-itme
-            - docker-user-ian
-          image: itme/$CIRCLE_PROJECT_REPONAME
-          tag: $CIRCLE_SHA1
-          # can't use $ here, need to give it an env var name
-          docker-username: DOCKER_USER
-          docker-password: DOCKER_PASSWORD
-          filters:
-            branches:
-              only: staging
+              only:
+                - main
+                - staging
       - helmfile-apply:
           name: apply/staging
           env: staging
@@ -95,6 +72,21 @@ workflows:
           filters:
             branches:
               only: staging
+          requires:
+            - docker/publish
+      - helmfile-apply:
+          name: apply/production
+          env: production
+          context:
+            - kube-primary
+            - docker-org-itme
+            - docker-user-ian
+            - mysilio-me-smtp
+          filters:
+            branches:
+              only: main
+          requires:
+            - docker/publish
   diff:
     jobs:
       - helmfile-diff:
