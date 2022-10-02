@@ -1,6 +1,6 @@
 repositories:
 - name: css
-  url: https://communitysolidserver.github.io/css-helm-chart/charts/
+  url: https://communitysolidserver.github.io/css-helm-chart/
 
 environments:
   production:
