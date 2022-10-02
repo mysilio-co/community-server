@@ -14,11 +14,16 @@ jobs:
       - run: npm run test:unit
       - run: npm run test:ingregration
   helmfile-apply:
+    parameters:
+      env:
+        type: string
     docker:
       - image: itme/helmfile:0.1
         auth:
           username: $DOCKER_USER
           password: $DOCKER_PASSWORD
+    environment:
+      HELMFILE_ENVIRONMENT: << parameters.env >>
     steps:
       - checkout
       - run: aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name $CLUSTER_NAME
@@ -50,6 +55,7 @@ workflows:
             branches:
               only: main
       - helmfile-apply:
+          env: production
           context:
             - kube-primary
             - docker-org-itme
@@ -73,6 +79,7 @@ workflows:
             branches:
               only: staging
       - helmfile-apply:
+          env: staging
           context:
             - kube-primary
             - docker-org-itme
