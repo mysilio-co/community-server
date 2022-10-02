@@ -2,23 +2,20 @@ repositories:
 - name: css
   url: https://communitysolidserver.github.io/css-helm-chart/charts/
 
+environments:
+  production:
+  staging:
+
 releases:
   - name: itme-image-pull-secrets
     namespace: mysilio-me
     chart: ./image-pull-secrets
     values:
       - ./values/image-pull-secrets.yaml.gotmpl
-  - name: production-css
+  - name: {{ .Environment.Name }}-css
     namespace: mysilio-me
     chart: css/community-solid-server
     values:
-      - ./values/production.yaml.gotmpl
-    needs:
-      - mysilio-me/itme-image-pull-secrets
-  - name: staging-css
-    namespace: mysilio-me
-    chart: css/community-solid-server
-    values:
-      - ./values/staging.yaml.gotmpl
+      - ./values/{{ .Environment.Name }}.yaml.gotmpl
     needs:
       - mysilio-me/itme-image-pull-secrets

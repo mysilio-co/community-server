@@ -35,7 +35,7 @@ jobs:
       - run: helmfile --file .deploy/helmfile.yaml diff
 
 workflows:
-  deploy:
+  production-deploy:
     jobs:
       - docker/publish:
           context:
@@ -58,6 +58,29 @@ workflows:
           filters:
             branches:
               only: main
+  staging-deploy:
+    jobs:
+      - docker/publish:
+          context:
+            - docker-org-itme
+            - docker-user-ian
+          image: itme/$CIRCLE_PROJECT_REPONAME
+          tag: $CIRCLE_SHA1
+          # can't use $ here, need to give it an env var name
+          docker-username: DOCKER_USER
+          docker-password: DOCKER_PASSWORD
+          filters:
+            branches:
+              only: staging
+      - helmfile-apply:
+          context:
+            - kube-primary
+            - docker-org-itme
+            - docker-user-ian
+            - mysilio-me-smtp
+          filters:
+            branches:
+              only: staging
   diff:
     jobs:
       - helmfile-diff:
