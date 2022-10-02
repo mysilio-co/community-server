@@ -17,6 +17,7 @@ customParameters:
   value: {{ requiredEnv "SMTP_USER" }}
 - flag: --smtpPassword
   value: {{ requiredEnv "SMTP_PASSWORD" }}
+baseUrlOverride: https://staging.mysilio.me
 ingress:
   enabled: true
   annotations:

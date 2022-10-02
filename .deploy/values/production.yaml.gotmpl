@@ -17,6 +17,7 @@ customParameters:
   value: {{ requiredEnv "SMTP_USER" }}
 - flag: --smtpPassword
   value: {{ requiredEnv "SMTP_PASSWORD" }}
+baseUrlOverride: https://mysilio.me
 ingress:
   enabled: true
   className: nginx
