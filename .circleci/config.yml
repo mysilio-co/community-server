@@ -85,7 +85,7 @@ workflows:
             branches:
               only: staging
       - helmfile-apply:
-          name: apply/production
+          name: apply/staging
           env: staging
           context:
             - kube-primary
@@ -107,7 +107,9 @@ workflows:
             - mysilio-me-smtp
           filters:
             branches:
-              ignore: main|staging
+              ignore:
+                - main
+                - staging
       - helmfile-diff:
           name: diff/production
           env: production
@@ -118,4 +120,6 @@ workflows:
             - mysilio-me-smtp
           filters:
             branches:
-              ignore: main|staging
+              ignore:
+                - main
+                - staging
