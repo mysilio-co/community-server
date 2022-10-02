@@ -46,6 +46,16 @@
       "comment": "Run the server in multithreaded mode with the set amount of workers.",
       "@id": "urn:solid-server:default:variable:workers",
       "@type": "Variable"
+    },
+    {
+      "comment": "Supply an SMTP User",
+      "@id": "urn:solid-server:default:variable:smtpUser",
+      "@type": "Variable"
+    },
+    {
+      "comment": "Supply an SMTP Password",
+      "@id": "urn:solid-server:default:variable:smtpPassword",
+      "@type": "Variable"
     }
   ]
 }

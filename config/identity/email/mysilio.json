@@ -1,0 +1,15 @@
+{
+  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/@solid/community-server/^5.0.0/components/context.jsonld",
+  "@graph": [
+    {
+      "comment": "A Mysilio specific SMTP config that uses values passed in via the cli",
+      "@id": "urn:solid-server:default:EmailSender",
+      "@type": "BaseEmailSender",
+      "args_senderName":  "Mysilio Support <support@mysilio.com>",
+      "args_emailConfig_host":  "email-smtp.us-west-2.amazonaws.com",
+      "args_emailConfig_port": 587,
+      "args_emailConfig_auth_user": { "@id": "urn:solid-server:default:variable:smtpUser" },
+      "args_emailConfig_auth_pass": { "@id": "urn:solid-server:default:variable:smtpPassword" }
+    }
+  ]
+}

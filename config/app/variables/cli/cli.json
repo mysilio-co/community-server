@@ -112,6 +112,24 @@
             "type": "number",
             "describe": "Run the server in multithreaded mode using workers. (special values: -1: num_cores-1, 0: num_cores). Defaults to 1 (singlethreaded)"
           }
+        },
+        {
+          "@type": "YargsParameter",
+          "name": "smtpUser",
+          "options": {
+            "requiresArg": true,
+            "type": "string",
+            "describe": "The User to use for SMTP"
+          }
+        },
+        {
+          "@type": "YargsParameter",
+          "name": "smtpPassword",
+          "options": {
+            "requiresArg": true,
+            "type": "string",
+            "describe": "The Password to use for SMTP"
+          }
         }
       ],
       "options": {

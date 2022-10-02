@@ -12,6 +12,12 @@ image:
   tag: {{ requiredEnv "CIRCLE_SHA1" }}
   pullSecrets:
   - itme-image-pull-secrets
+customParameters:
+- flag: --smtpUser
+  value: {{ requiredEnv "SMTP_USER" }}
+- flag: --smtpPassword
+  value: {{ requiredEnv "SMTP_PASSWORD" }}
+baseUrlOverride: https://mysilio.me
 ingress:
   enabled: true
   className: nginx

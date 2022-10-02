@@ -14,21 +14,31 @@ jobs:
       - run: npm run test:unit
       - run: npm run test:ingregration
   helmfile-apply:
+    parameters:
+      env:
+        type: string
     docker:
       - image: itme/helmfile:0.1
         auth:
           username: $DOCKER_USER
           password: $DOCKER_PASSWORD
+    environment:
+      HELMFILE_ENVIRONMENT: << parameters.env >>
     steps:
       - checkout
       - run: aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name $CLUSTER_NAME
       - run: helmfile --file .deploy/helmfile.yaml apply
   helmfile-diff:
+    parameters:
+      env:
+        type: string
     docker:
       - image: itme/helmfile:0.1
         auth:
           username: $DOCKER_USER
           password: $DOCKER_PASSWORD
+    environment:
+      HELMFILE_ENVIRONMENT: << parameters.env >>
     steps:
       - checkout
       - run: aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name $CLUSTER_NAME
@@ -48,8 +58,25 @@ workflows:
           docker-password: DOCKER_PASSWORD
           filters:
             branches:
-              only: main
+              only:
+                - main
+                - staging
       - helmfile-apply:
+          name: apply/staging
+          env: staging
+          context:
+            - kube-primary
+            - docker-org-itme
+            - docker-user-ian
+            - mysilio-me-smtp
+          filters:
+            branches:
+              only: staging
+          requires:
+            - docker/publish
+      - helmfile-apply:
+          name: apply/production
+          env: production
           context:
             - kube-primary
             - docker-org-itme
@@ -58,9 +85,13 @@ workflows:
           filters:
             branches:
               only: main
+          requires:
+            - docker/publish
   diff:
     jobs:
       - helmfile-diff:
+          name: diff/staging
+          env: staging
           context:
             - kube-primary
             - docker-org-itme
@@ -68,4 +99,19 @@ workflows:
             - mysilio-me-smtp
           filters:
             branches:
-              ignore: main
+              ignore:
+                - main
+                - staging
+      - helmfile-diff:
+          name: diff/production
+          env: production
+          context:
+            - kube-primary
+            - docker-org-itme
+            - docker-user-ian
+            - mysilio-me-smtp
+          filters:
+            branches:
+              ignore:
+                - main
+                - staging
