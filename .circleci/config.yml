@@ -59,7 +59,8 @@ workflows:
           filters:
             branches:
               only: main
-      - apply/production:
+      - helmfile-apply:
+          name: apply/production
           env: production
           context:
             - kube-primary
@@ -83,7 +84,8 @@ workflows:
           filters:
             branches:
               only: staging
-      - apply/staging:
+      - helmfile-apply:
+          name: apply/production
           env: staging
           context:
             - kube-primary
@@ -95,7 +97,8 @@ workflows:
               only: staging
   diff:
     jobs:
-      - diff/staging:
+      - helmfile-diff:
+          name: diff/staging
           env: staging
           context:
             - kube-primary
@@ -105,7 +108,8 @@ workflows:
           filters:
             branches:
               ignore: main|staging
-      - diff/production:
+      - helmfile-diff:
+          name: diff/production
           env: production
           context:
             - kube-primary
