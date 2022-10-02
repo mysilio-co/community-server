@@ -15,6 +15,7 @@ releases:
   - name: {{ .Environment.Name }}-css
     namespace: mysilio-me
     chart: css/community-solid-server
+    version: 2.1.0
     values:
       - ./values/{{ .Environment.Name }}.yaml.gotmpl
     needs:
