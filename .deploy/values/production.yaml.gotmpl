@@ -20,8 +20,8 @@ customParameters:
 baseUrlOverride: https://mysilio.me
 ingress:
   enabled: true
-  className: nginx
   annotations:
+    kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt-dns"
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
   host: mysilio.me
