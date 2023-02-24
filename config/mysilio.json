@@ -36,5 +36,20 @@
     {
       "comment": "A configuration for MySilio"
     },
+
+    {
+      "comment": "Serve Databrowser as default representation",
+      "@id": "urn:solid-server:default:DefaultUiConverter",
+      "@type": "ConstantConverter",
+      "contentType": "text/html",
+      "filePath": "./templates/penny-redirect/penny-redirect.html",
+      "options_container": true,
+      "options_document": true,
+      "options_minQuality": 1,
+      "options_disabledMediaRanges": [
+        "image/*",
+        "application/pdf"
+      ]
+    }
   ]
 }
